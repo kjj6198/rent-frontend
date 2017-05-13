@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rent</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="./dist/owl.carousel.min.js"></script>
+  <link rel="stylesheet" href="./dist/assets/owl.carousel.min.css">
+
+  <style>
+    body, html {
+      font-size: 20px;
+      font-family: PingFang TC, Noto Sans CJK TC;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card {
+
+    }
+    .number {
+      font-size: 3em;
+    }
+    .focus {
+      font-size: 1.2em;
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+<div class="datas"></div>  
+</body>
+<script>
+  const simpleFormat = (str) => {
+    return str.split('\n')
+      .map(line => `${line}<br/>`)
+      .join('');
+  }
+  $.getJSON('https://rent-search.herokuapp.com/search')
+    .then((data, status) => {
+      document.querySelector('.datas').innerHTML = data.houses
+        .map(house => {
+          house.photos = house.photos
+            .split(',')
+            .map(s => s.replace(/"/g, ''))
+            .map(src => `<img src="${src}" style="max-width:100%"/>`)
+            .join('');
+          return house;
+        })
+        .map(data => {
+          return `
+            <div class="card">
+              <h2>${data.title}</h2>
+              <div class="card-images owl-carousel owl-theme">
+                ${data.photos}
+              </div>
+              <p>${data.landlordInfo}</p>
+              <p><strong class="number">${data.price}</strong></p>
+              <p>${simpleFormat(data.houseDetail.join('\n'))}</p>
+              <p>${data.details.map(d => d.indexOf('開伙：可以') === -1 ? d : `<strong class="focus">${d}</strong>`).join('\n')}</p>
+              <a href="${data.url}" taget="_blank">連結</a>
+            </div>
+          `;
+        })
+        .join('')
+
+        $('.card-images').owlCarousel({
+          autoplay: true,
+          responsive: {
+            0: {
+              items: 1
+            },
+            768: {
+              items: 3
+            },
+            1024: {
+              items: 4
+            }
+          },
+          lazyLoad: true
+        });
+    });
+
+
+</script>
+</html>
