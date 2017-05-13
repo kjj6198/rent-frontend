@@ -14,6 +14,8 @@ $.getJSON('https://rent-search.herokuapp.com/search')
           .join('');
         return house;
       })
+      .filter(d => d.details.some(dd => dd.indexOf('性別要求：男女生皆可') > -1))
+      .filter(d => d.details.some(dd => dd.indexOf('開伙：可以') > -1))
       .map(data => {
         return `
           <div class="card">
