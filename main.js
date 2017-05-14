@@ -27,7 +27,7 @@ $.getJSON('https://rent-search.herokuapp.com/search')
             <p><strong class="number">${data.price}</strong></p>
             <p>${simpleFormat(data.houseDetail.join('\n'))}</p>
             <p>${data.details.map(d => d.indexOf('開伙：可以') === -1 ? d : `<strong class="focus">${d}</strong>`).join('\n')}</p>
-            <a href="${data.url}" taget="_blank">連結</a>
+            <a href="${data.url}" target="_blank">連結</a>
           </div>
         `;
       })
